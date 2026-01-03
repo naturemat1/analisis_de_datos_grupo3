@@ -7,61 +7,44 @@ from sklearn.decomposition import PCA
 
 DATASET = "Amazon.csv"
 
-df = pd.read_csv(DATASET, decimal='.', skipinitialspace=True)
+# --- CONFIGURACIÓN DE VISUALIZACIÓN EN PANDAS ---
+pd.set_option('display.max_columns', None) # Muestra todas las columnas del DataFrame (sin truncarlas)
+pd.set_option('display.width', 180) # Ajusta el ancho máximo de la salida en consola
+pd.set_option('display.max_rows', 100) # Muestra hasta 100 filas como máximo
+pd.set_option('display.float_format', '{:.2f}'.format) # Formato para números flotantes: 2 decimales
 
-# Limpiar nombres de columna:
-# - quitar espacios
-# - reemplazar caracteres especiales por _
-# - pasar todo a minúsculas (opcional)
-df.columns = (
-    df.columns.str.strip()                # Quita espacios
-              .str.replace(r'[^\w]', '_', regex=True)  # Reemplaza todo lo que no sea letra/número por _
-              .str.lower()                # Minusculas opcional
-)
+# --- CONFIGURACIÓN DE ESTILO PARA GRÁFICOS ---
+plt.style.use('seaborn-v0_8-darkgrid') # Define un estilo visual oscuro con cuadrícula para matplotlib
+sns.set_palette("husl") # Define la paleta de colores para seaborn
 
-# Limpiar los datos de strings
-df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+# --- CARGA DEL DATASET ---
+df = pd.read_csv(DATASET) # Lee el archivo CSV y guardarlo en un DataFrame
 
-# Forzar columnas numéricas
-numeric_cols = ['quantity', 'unitprice', 'discount', 'tax', 'shippingcost', 'totalamount']
-for col in numeric_cols:
-    df[col] = pd.to_numeric(df[col], errors='coerce')
+# --- INFORMACIÓN GENERAL DEL DATASET ---
+print("\n1. DIMENSIONES - DATASET:")
+# Muestra la forma del DataFrame (filas, columnas)
+print(f"   Shape: {df.shape}")
+print(f"   Total Registros: {df.shape[0]:,}")
+print(f"   Total Variables: {df.shape[1]}")
 
-# Guardar CSV final
-df.to_csv("Amazon_Discover_Renamed.csv", index=False, sep=',', decimal='.')
+# --- PRIMERAS FILAS DEL DATASET ---
+print("\n2. PRIMERAS 5 FILAS:")
+print(df.head())
+
+# --- ÚLTIMAS FILAS DEL DATASET ---
+print("\n3. ULTIMAS 5 FILAS:")
+print(df.tail())
+
+# --- TIPOS DE VARIABLES DEL DATASET ---
+print(f"\n4. Tipos de Variables")
+print(f"{df.info()}\n")
+
+# --- PROMEDIO DE VALORES NULOS ---
+print(f"\n5. Promedio de Valores Nulos\n{df.isnull().mean().sort_values(ascending=False)}\n")
+
+print(f"*****Cantidad de Valores Duplicados*****\n{df.duplicated().sum()}\n")
 
 
-
-
-
-
-
-
-
-# pd.set_option('display.max_columns', None)  # Mostrar todas las columnas
-# pd.set_option('display.width', 180)         # Ajusta el ancho de la salida
-# pd.set_option('display.max_rows', 100)
-# pd.set_option('display.float_format', '{:.2f}'.format)
-
-# # Set style for plots
-# plt.style.use('seaborn-v0_8-darkgrid')
-# sns.set_palette("husl")
-
-# # Load the dataset
-# df = pd.read_csv(DATASET)
-
-# print("\n1. DATASET DIMENSIONS:")
-# print(f"   Shape: {df.shape}")
-# print(f"   Total Records: {df.shape[0]:,}")
-# print(f"   Total Features: {df.shape[1]}")
-
-# # Display first few rows
-# print("\n2. FIRST 5 ROWS:")
-# print(df.head())
-
-# # Display last few rows
-# print("\n3. LAST 5 ROWS:")
-# print(df.tail())
 
 # dtypes = {
 #     'year': 'Int16',
@@ -101,13 +84,8 @@ df.to_csv("Amazon_Discover_Renamed.csv", index=False, sep=',', decimal='.')
 #                 dtype=dtypes)
 #                 # nrows=1000) 
 
-# print(f"*****Data Set*****\n{df}\n")
-# print(f"*****Tipos de Variables Definidas*****")
-# print(f"{df.info()}\n")
 
-# print(f"*****Promedio de Valores Nulos*****\n{df.isnull().mean().sort_values(ascending=False)}\n")
 
-# print(f"*****Cantidad de Valores Duplicados*****\n{df.duplicated(subset=['year','month','day','store_id','sku_id']).sum()}\n")
 
 
 # #Especificacion de variables numericas y categoricas
